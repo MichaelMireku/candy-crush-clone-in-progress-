@@ -1,0 +1,57 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android' // Add this line
+apply plugin: 'kotlin-kapt' // Add this line
+
+android {
+    compileSdkVersion 33 // Update to the latest version
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    defaultConfig {
+        applicationId "com.example.fluttercrush"
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 33 // Update to the latest version
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20' // Update to the latest version
+
+    testImplementation 'junit:junit:4.13.2' // Update to the latest version
+    androidTestImplementation 'androidx.test:runner:1.5.2' // Update to the latest version
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1' // Update to the latest version
+}
